@@ -243,6 +243,7 @@ ProjectTaskManagement-API/
 | Redis caching | ✅ |
 | API versioning + Swagger JWT | ✅ |
 | Role-based authorization | ✅ |
+| Postman collection | ✅ |
 | Pagination | ✅ |
 
 ---
