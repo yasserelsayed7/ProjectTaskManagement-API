@@ -1,6 +1,12 @@
 # Project & Task Management API
 
+[![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4)](https://dotnet.microsoft.com/)
+[![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%2F%20Onion-success)](ARCHITECTURE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Enterprise-grade **ASP.NET Core Web API** built with **.NET 9**, **Clean Architecture**, **CQRS + MediatR**, **JWT Authentication**, **EF Core**, **SQL Server**, **Redis**, **Docker**, and **xUnit** tests.
+
+**Repository:** [github.com/yasserelsayed7/Backend-.NET-Developer---Technical-Assessment-Task-](https://github.com/yasserelsayed7/Backend-.NET-Developer---Technical-Assessment-Task-)
 
 ---
 
@@ -86,9 +92,9 @@ This solution follows **Clean Architecture (Onion Architecture)**:
 ### 1. Clone and restore
 
 ```bash
-git clone <your-repo-url>
-cd assessment
-dotnet restore
+git clone https://github.com/yasserelsayed7/Backend-.NET-Developer---Technical-Assessment-Task-.git
+cd Backend-.NET-Developer---Technical-Assessment-Task-
+dotnet restore ProjectTaskManagement.slnx
 ```
 
 ### 2. Update connection string
