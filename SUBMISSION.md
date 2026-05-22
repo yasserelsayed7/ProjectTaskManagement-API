@@ -70,6 +70,11 @@ docker-compose up --build
 
 For admin: login as `admin@projecttask.com` / `Admin@123` → `GET /api/v1/admin/stats`
 
+### Postman
+
+Import `postman/ProjectTaskManagement-API.postman_collection.json` and `postman/ProjectTaskManagement-Local.postman_environment.json`.  
+Run **Auth → Login (Demo User)** first — JWT is saved automatically.
+
 ---
 
 ## Design Highlights for Interview

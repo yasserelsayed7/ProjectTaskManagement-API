@@ -180,7 +180,20 @@ Migrations and seed data apply automatically on startup.
 dotnet test ProjectTaskManagement.sln
 ```
 
-Use **`ProjectTaskManagement.API.http`** (VS Code REST Client / Rider) for manual API testing.
+### Postman Collection
+
+Import from the `postman/` folder:
+
+| File | Purpose |
+|------|---------|
+| `postman/ProjectTaskManagement-API.postman_collection.json` | All API endpoints with auto JWT token |
+| `postman/ProjectTaskManagement-Local.postman_environment.json` | Local `baseUrl` variables |
+
+See [postman/README.md](postman/README.md) for import steps and test flow.
+
+### REST Client (VS Code / Rider)
+
+Use **`ProjectTaskManagement.API.http`** for manual API testing.
 
 ---
 
@@ -197,6 +210,7 @@ ProjectTaskManagement-API/
 │   └── ProjectTaskManagement.UnitTests/
 ├── Dockerfile
 ├── docker-compose.yml
+├── postman/                                  # Postman collection + environment
 ├── ARCHITECTURE.md
 └── ProjectTaskManagement.sln
 ```
