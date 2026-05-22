@@ -2,27 +2,38 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: '9.0.x'
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
-        run: dotnet restore ProjectTaskManagement.slnx
+        run: dotnet restore ProjectTaskManagement.sln
 
       - name: Build
-        run: dotnet build ProjectTaskManagement.slnx --configuration Release --no-restore
+        run: dotnet build ProjectTaskManagement.sln --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test ProjectTaskManagement.slnx --configuration Release --no-build --verbosity normal
+        run: dotnet test ProjectTaskManagement.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: '**/TestResults/**'

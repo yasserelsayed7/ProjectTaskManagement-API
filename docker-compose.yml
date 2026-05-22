@@ -1,3 +1,5 @@
+name: project-task-management
+
 services:
   api:
     build:

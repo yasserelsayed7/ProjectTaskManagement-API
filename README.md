@@ -1,130 +1,94 @@
 # Project & Task Management API
 
-[![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4)](https://dotnet.microsoft.com/)
-[![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%2F%20Onion-success)](ARCHITECTURE.md)
+[![CI](https://github.com/yasserelsayed7/ProjectTaskManagement-API/actions/workflows/ci.yml/badge.svg)](https://github.com/yasserelsayed7/ProjectTaskManagement-API/actions/workflows/ci.yml)
+[![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
+[![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%2F%20Onion-2ea44f)](ARCHITECTURE.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Enterprise-grade **ASP.NET Core Web API** built with **.NET 9**, **Clean Architecture**, **CQRS + MediatR**, **JWT Authentication**, **EF Core**, **SQL Server**, **Redis**, **Docker**, and **xUnit** tests.
+> **Backend .NET Developer Technical Assessment** — A production-style REST API for managing projects and tasks with JWT authentication, Clean Architecture, and enterprise patterns.
 
-**Repository:** [github.com/yasserelsayed7/Backend-.NET-Developer---Technical-Assessment-Task-](https://github.com/yasserelsayed7/Backend-.NET-Developer---Technical-Assessment-Task-)
-
----
-
-## Solution Structure
-
-```
-ProjectTaskManagement/
-├── src/
-│   ├── ProjectTaskManagement.Domain/          # Entities, Enums, Interfaces, Domain Exceptions
-│   ├── ProjectTaskManagement.Application/     # CQRS, DTOs, Validators, Behaviors
-│   ├── ProjectTaskManagement.Infrastructure/  # EF Core, Repositories, JWT, Redis, Seeding
-│   └── ProjectTaskManagement.API/             # Controllers, Middleware, Swagger, Program.cs
-├── tests/
-│   └── ProjectTaskManagement.UnitTests/       # xUnit + Moq + FluentAssertions
-├── Dockerfile
-├── docker-compose.yml
-└── ProjectTaskManagement.sln
-```
+**Author:** [Yasser Elsayed](https://github.com/yasserelsayed7)
 
 ---
 
-## Architecture
+## Table of Contents
 
-This solution follows **Clean Architecture (Onion Architecture)**:
-
-| Layer | Responsibility |
-|-------|----------------|
-| **Domain** | Core business entities and rules. No external dependencies. |
-| **Application** | Use cases via CQRS (MediatR), validation (FluentValidation), DTOs, abstractions. |
-| **Infrastructure** | EF Core, SQL Server, Redis cache, JWT token generation, repositories. |
-| **API** | HTTP endpoints, authentication middleware, Swagger, versioning, health checks. |
-
-**Dependency rule:** outer layers depend on inner layers — never the reverse.
-
-**Patterns used:**
-- CQRS + MediatR
-- Repository + Unit of Work
-- Pipeline Behaviors (Validation, Logging)
-- Generic API Response Wrapper
-- Global Exception Middleware
-- JWT Bearer Authentication
-- Role-based Authorization (`Admin`, `User`)
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+- [Docker](#docker)
+- [API Reference](#api-reference)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Documentation](#documentation)
+- [Assessment Checklist](#assessment-checklist)
 
 ---
 
-## Highlights (Production-Ready)
+## Overview
 
-- **Version-based Redis cache invalidation** — project lists stay consistent after mutations
-- **Database-level pagination** — efficient `ProjectReadRepository` and `TaskReadRepository`
-- **EF Core retry policy** — resilient SQL Server connections
-- **Admin dashboard API** — `GET /api/v1/admin/stats` (Admin role only)
-- **10 unit tests** — validators + handlers with Moq
-- **Swagger enabled in Docker** — test via `http://localhost:5000/swagger`
-- **`.http` file** — ready-to-run REST Client requests in VS Code / Rider
+Each authenticated user can create and manage **projects**, and manage **tasks** within those projects. The API enforces ownership so users only access their own data, with an **Admin** role for system statistics.
 
-## Technologies
-
-- .NET 9 / ASP.NET Core Web API
-- Entity Framework Core 9 + SQL Server
-- JWT Authentication + BCrypt password hashing
-- MediatR + FluentValidation
-- Redis distributed caching (with in-memory fallback)
-- Serilog
-- Swagger / OpenAPI with JWT support
-- API Versioning (v1)
-- Health Checks
-- Docker + docker-compose
-- xUnit, Moq, FluentAssertions
+**Live repository:** [github.com/yasserelsayed7/ProjectTaskManagement-API](https://github.com/yasserelsayed7/ProjectTaskManagement-API)
 
 ---
 
-## Prerequisites
+## Features
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download)
-- [SQL Server](https://www.microsoft.com/sql-server) (or Docker)
-- [Redis](https://redis.io/) (optional — falls back to in-memory cache)
-- [Docker Desktop](https://www.docker.com/) (optional)
+| Category | Implemented |
+|----------|-------------|
+| Authentication | Register, Login, JWT, BCrypt hashing |
+| Projects CRUD | Create, Read (list + by id), Update, Delete |
+| Tasks | Create, Update status, List by project, Delete |
+| Architecture | Clean / Onion, SOLID, DI, Repository + UoW |
+| CQRS | MediatR commands & queries |
+| Validation | FluentValidation pipeline |
+| Caching | Redis with version-based invalidation |
+| API | Versioning (v1), Swagger + JWT, CORS, health checks |
+| DevOps | Dockerfile, docker-compose, GitHub Actions CI |
+| Testing | 10 xUnit tests (Moq, FluentAssertions) |
+| Extras | Serilog, pagination, search, role-based admin API |
 
 ---
 
-## Quick Start (Local)
+## Tech Stack
 
-### 1. Clone and restore
+.NET 9 · ASP.NET Core Web API · EF Core 9 · SQL Server · JWT · MediatR · FluentValidation · Redis · Serilog · Swagger · Docker · xUnit
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+- [.NET 9 SDK](https://dotnet.microsoft.com/download) (or SDK 10+ with roll-forward)
+- SQL Server (local or Docker)
+
+### Clone & run
 
 ```bash
-git clone https://github.com/yasserelsayed7/Backend-.NET-Developer---Technical-Assessment-Task-.git
-cd Backend-.NET-Developer---Technical-Assessment-Task-
-dotnet restore ProjectTaskManagement.slnx
-```
-
-### 2. Update connection string
-
-Edit `src/ProjectTaskManagement.API/appsettings.Development.json`:
-
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=localhost,1433;Database=ProjectTaskManagementDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;",
-  "Redis": "localhost:6379"
-}
-```
-
-### 3. Apply migrations
-
-```bash
+git clone https://github.com/yasserelsayed7/ProjectTaskManagement-API.git
+cd ProjectTaskManagement-API
+dotnet restore ProjectTaskManagement.sln
 dotnet ef database update --project src/ProjectTaskManagement.Infrastructure --startup-project src/ProjectTaskManagement.API
-```
-
-### 4. Run API
-
-```bash
 dotnet run --project src/ProjectTaskManagement.API
 ```
 
-Open Swagger: `https://localhost:7xxx/swagger` (see `launchSettings.json` for port).
+Open **Swagger:** http://localhost:5000/swagger
+
+### Demo accounts
+
+| Email | Password | Role |
+|-------|----------|------|
+| `user@projecttask.com` | `User@123` | User |
+| `admin@projecttask.com` | `Admin@123` | Admin |
 
 ---
 
 ## Docker
+
+One command runs **API + SQL Server + Redis**:
 
 ```bash
 docker-compose up --build
@@ -132,62 +96,67 @@ docker-compose up --build
 
 | Service | URL |
 |---------|-----|
-| API | http://localhost:5000 |
 | Swagger | http://localhost:5000/swagger |
 | Health | http://localhost:5000/health |
-| SQL Server | localhost:1433 |
-| Redis | localhost:6379 |
+| SQL Server | `localhost:1433` |
+| Redis | `localhost:6379` |
 
-Migrations and seed data run automatically on startup.
-
----
-
-## Seed Users
-
-| Email | Password | Role |
-|-------|----------|------|
-| admin@projecttask.com | Admin@123 | Admin |
-| user@projecttask.com | User@123 | User |
+Migrations and seed data apply automatically on startup.
 
 ---
 
-## API Endpoints (v1)
+## API Reference
 
-Base URL: `/api/v1`
+**Base URL:** `/api/v1`
 
-### Authentication (Public)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/auth/register` | Register new user |
-| POST | `/auth/login` | Login and receive JWT |
-
-### Projects (Authorized)
+<details>
+<summary><strong>Authentication</strong> (public)</summary>
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/projects` | Create project |
-| GET | `/projects?pageNumber=1&pageSize=10&search=` | List projects (paginated) |
-| GET | `/projects/{id}` | Get project by ID |
-| PUT | `/projects/{id}` | Update project |
-| DELETE | `/projects/{id}` | Delete project and its tasks |
+| `POST` | `/auth/register` | Register |
+| `POST` | `/auth/login` | Login → JWT |
 
-### Tasks (Authorized)
+</details>
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/tasks` | Create task |
-| PATCH | `/tasks/{id}/status` | Update task status |
-| GET | `/tasks/project/{projectId}?status=&pageNumber=1&pageSize=20` | List tasks by project |
-| DELETE | `/tasks/{id}` | Delete task |
-
-### Admin (Admin role only)
+<details>
+<summary><strong>Projects</strong> (Bearer token required)</summary>
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/admin/stats` | System-wide user/project/task statistics |
+| `POST` | `/projects` | Create |
+| `GET` | `/projects?pageNumber=1&pageSize=10&search=` | List (paginated) |
+| `GET` | `/projects/{id}` | Get by id |
+| `PUT` | `/projects/{id}` | Update |
+| `DELETE` | `/projects/{id}` | Delete (+ cascade tasks) |
 
-### Standard Response Format
+</details>
+
+<details>
+<summary><strong>Tasks</strong> (Bearer token required)</summary>
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/tasks` | Create |
+| `PATCH` | `/tasks/{id}/status` | Update status |
+| `GET` | `/tasks/project/{projectId}` | List by project |
+| `DELETE` | `/tasks/{id}` | Delete |
+
+**Status:** `Todo=0` · `InProgress=1` · `Done=2` · `Cancelled=3`  
+**Priority:** `Low=0` · `Medium=1` · `High=2` · `Critical=3`
+
+</details>
+
+<details>
+<summary><strong>Admin</strong> (Admin role only)</summary>
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/admin/stats` | Users / projects / tasks counts |
+
+</details>
+
+### Response envelope
 
 ```json
 {
@@ -198,86 +167,72 @@ Base URL: `/api/v1`
 }
 ```
 
-### Task Status Values (`TaskItemStatus`)
+### Swagger JWT
 
-`Todo` (0), `InProgress` (1), `Done` (2), `Cancelled` (3)
-
-### Task Priority Values
-
-`Low` (0), `Medium` (1), `High` (2), `Critical` (3)
+1. `POST /api/v1/auth/login` → copy `data.token`
+2. Swagger **Authorize** → `Bearer <token>`
 
 ---
 
-## Swagger JWT Usage
-
-1. Call `POST /api/v1/auth/login` with credentials.
-2. Copy the `token` from the response `data` object.
-3. Click **Authorize** in Swagger.
-4. Enter: `Bearer <your-token>`
-
----
-
-## EF Core Commands
+## Testing
 
 ```bash
-# Add migration
-dotnet ef migrations add <MigrationName> --project src/ProjectTaskManagement.Infrastructure --startup-project src/ProjectTaskManagement.API --output-dir Persistence/Migrations
+dotnet test ProjectTaskManagement.sln
+```
 
-# Update database
-dotnet ef database update --project src/ProjectTaskManagement.Infrastructure --startup-project src/ProjectTaskManagement.API
+Use **`ProjectTaskManagement.API.http`** (VS Code REST Client / Rider) for manual API testing.
 
-# Remove last migration
-dotnet ef migrations remove --project src/ProjectTaskManagement.Infrastructure --startup-project src/ProjectTaskManagement.API
+---
+
+## Project Structure
+
+```
+ProjectTaskManagement-API/
+├── src/
+│   ├── ProjectTaskManagement.Domain/
+│   ├── ProjectTaskManagement.Application/    # CQRS, DTOs, Validation
+│   ├── ProjectTaskManagement.Infrastructure/ # EF Core, JWT, Redis
+│   └── ProjectTaskManagement.API/
+├── tests/
+│   └── ProjectTaskManagement.UnitTests/
+├── Dockerfile
+├── docker-compose.yml
+├── ARCHITECTURE.md
+└── ProjectTaskManagement.sln
 ```
 
 ---
 
-## Run Tests
+## Documentation
 
-```bash
-dotnet test   # 10 tests
-```
-
-## REST Client
-
-Use `ProjectTaskManagement.API.http` in VS Code (REST Client extension) or Rider to exercise all endpoints with saved variables.
-
-## Architecture Doc
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for diagrams and design decisions.
+- [ARCHITECTURE.md](ARCHITECTURE.md) — layers, request flow, caching, security
+- [SUBMISSION.md](SUBMISSION.md) — assessment requirements mapping
 
 ---
 
-## GitHub Commit Strategy
+## Assessment Checklist
 
-Recommended incremental commits for a professional submission:
-
-```text
-1. chore: initialize clean architecture solution structure
-2. feat(domain): add entities, enums, and repository abstractions
-3. feat(application): implement CQRS handlers, DTOs, and FluentValidation
-4. feat(infrastructure): add EF Core, repositories, JWT, and Redis caching
-5. feat(api): add controllers, middleware, swagger, and versioning
-6. feat(auth): implement JWT authentication and role-based authorization
-7. chore(docker): add Dockerfile and docker-compose setup
-8. test: add unit tests for validators and handlers
-9. docs: add README and API documentation
-```
-
----
-
-## Production Notes
-
-- Change `JwtSettings:Secret` to a strong key stored in **Azure Key Vault**, **AWS Secrets Manager**, or environment variables.
-- Restrict CORS policy to known frontend origins (replace `AllowAll`).
-- Use **HTTPS** termination at reverse proxy (NGINX / Azure App Gateway).
-- Enable **SQL Server backups** and connection resiliency (EF retry policy).
-- Configure **Redis** for production cluster with authentication.
-- Add **rate limiting** and **API gateway** when moving to microservices.
-- Consider splitting into bounded contexts (Auth Service, Project Service) for true microservices.
+| Requirement | Status |
+|-------------|--------|
+| .NET 9 Web API | ✅ |
+| Clean / Onion Architecture | ✅ |
+| EF Core + SQL Server | ✅ |
+| JWT Authentication | ✅ |
+| Projects module (full CRUD) | ✅ |
+| Tasks module | ✅ |
+| CQRS + MediatR | ✅ |
+| FluentValidation | ✅ |
+| Global exception handling | ✅ |
+| Repository pattern | ✅ |
+| Docker | ✅ |
+| Unit tests | ✅ |
+| Redis caching | ✅ |
+| API versioning + Swagger JWT | ✅ |
+| Role-based authorization | ✅ |
+| Pagination | ✅ |
 
 ---
 
 ## License
 
-MIT — built as a technical assessment demonstration project.
+[MIT](LICENSE) © 2026 Yasser Elsayed
