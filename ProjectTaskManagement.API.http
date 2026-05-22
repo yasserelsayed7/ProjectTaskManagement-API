@@ -1,0 +1,87 @@
+@host = http://localhost:5000
+@version = v1
+@token = {{login.response.body.data.token}}
+
+### Register
+# @name register
+POST {{host}}/api/{{version}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "newuser@test.com",
+  "password": "Password123",
+  "fullName": "New User"
+}
+
+### Login (demo user)
+# @name login
+POST {{host}}/api/{{version}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@projecttask.com",
+  "password": "User@123"
+}
+
+### Login (admin)
+# @name adminLogin
+POST {{host}}/api/{{version}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@projecttask.com",
+  "password": "Admin@123"
+}
+
+### Health
+GET {{host}}/health
+
+### Get all projects (paginated)
+GET {{host}}/api/{{version}}/projects?pageNumber=1&pageSize=10
+Authorization: Bearer {{token}}
+
+### Create project
+POST {{host}}/api/{{version}}/projects
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "My New Project",
+  "description": "Assessment demo project"
+}
+
+### Get project by id
+@projectId = 00000000-0000-0000-0000-000000000000
+GET {{host}}/api/{{version}}/projects/{{projectId}}
+Authorization: Bearer {{token}}
+
+### Create task
+POST {{host}}/api/{{version}}/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "projectId": "{{projectId}}",
+  "title": "Implement caching",
+  "description": "Add Redis cache with version invalidation",
+  "dueDate": "2026-06-01T00:00:00Z",
+  "priority": 2
+}
+
+### Get tasks by project
+GET {{host}}/api/{{version}}/tasks/project/{{projectId}}?pageNumber=1&pageSize=20&status=0
+Authorization: Bearer {{token}}
+
+### Update task status (0=Todo, 1=InProgress, 2=Done, 3=Cancelled)
+@taskId = 00000000-0000-0000-0000-000000000000
+PATCH {{host}}/api/{{version}}/tasks/{{taskId}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": 1
+}
+
+### Admin stats (requires Admin JWT)
+GET {{host}}/api/{{version}}/admin/stats
+Authorization: Bearer {{adminLogin.response.body.data.token}}
